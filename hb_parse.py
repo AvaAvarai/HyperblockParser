@@ -1,67 +1,69 @@
 import matplotlib.pyplot as plt
-import numpy as np
+import matplotlib.colors as mcolors
 import re
 
-# Function to parse the normal form statements
-def parse_normal_form(statement):
-    """Parses a normal form statement into axis bounds."""
-    # Regular expression to extract variable names and their bounds
+# Function to parse a single normal form statement
+def parse_single_statement(statement):
+    """Parses a single normal form statement into axis bounds."""
     pattern = r"(\d*\.?\d+)\s*<=\s*(\w+)\s*<=\s*(\d*\.?\d+)"
     matches = re.findall(pattern, statement)
 
-    # Dictionary to store bounds for each variable
     bounds = {}
     for match in matches:
         lower, var, upper = match
         lower, upper = float(lower), float(upper)
-        # Normalize variable names to handle case variations
         var = var.lower()
         if var not in bounds:
             bounds[var] = []
         bounds[var].append((lower, upper))
-
-    # Handle OR statements (v)
-    or_pattern = r"\[(.*?)\]"
-    or_matches = re.findall(or_pattern, statement)
-    for or_match in or_matches:
-        # Split OR statement by 'v' and parse each part
-        or_parts = or_match.split('v')
-        for part in or_parts:
-            sub_matches = re.findall(pattern, part)
-            for sub_match in sub_matches:
-                lower, var, upper = sub_match
-                lower, upper = float(lower), float(upper)
-                var = var.lower()
-                if var not in bounds:
-                    bounds[var] = []
-                bounds[var].append((lower, upper))
-
     return bounds
 
+# Function to parse combined statements (e.g., HB1 + HB2)
+def parse_normal_form(statement):
+    """Parses combined statements into a list of bounds for each hyperblock."""
+    # Split by '+' operator to handle combined hyperblocks
+    parts = statement.split('+')
+    hyperblocks = []
+
+    for part in parts:
+        part = part.strip()
+        bounds = parse_single_statement(part)
+        hyperblocks.append(bounds)
+
+    return hyperblocks
+
 # Function to visualize the hyperblocks in parallel coordinates
-def visualize_hyperblocks(bounds):
+def visualize_hyperblocks(hyperblocks):
     """Visualizes the hyperblocks as polylines in parallel coordinates."""
-    # Get unique variables (case-insensitive)
-    variables = sorted(list(set(var.lower() for var in bounds.keys())))
+    # Collect all unique variables
+    all_variables = set()
+    for bounds in hyperblocks:
+        all_variables.update(bounds.keys())
+    variables = sorted(all_variables)
     num_axes = len(variables)
 
-    # Create the plot
+    # Generate unique colors for each hyperblock
+    colors = list(mcolors.TABLEAU_COLORS.values())
+
     fig, ax = plt.subplots(figsize=(10, 6))
 
-    # Plot all intervals for each variable
-    for i, var in enumerate(variables):
-        intervals = bounds[var]
-        for lower, upper in intervals:
-            ax.plot([i, i], [lower, upper], color="blue", linewidth=2)
+    for hb_idx, bounds in enumerate(hyperblocks):
+        color = colors[hb_idx % len(colors)]  # Cycle through colors if there are many HBs
+        for i, var in enumerate(variables):
+            if var in bounds:
+                intervals = bounds[var]
+                for lower, upper in intervals:
+                    ax.plot([i, i], [lower, upper], color=color, linewidth=2)
 
-    # Connect intervals between adjacent axes
-    for i in range(num_axes - 1):
-        var1 = variables[i]
-        var2 = variables[i + 1]
-        for l1, u1 in bounds[var1]:
-            for l2, u2 in bounds[var2]:
-                ax.plot([i, i + 1], [u1, u2], color="blue", linewidth=1, linestyle="--")
-                ax.plot([i, i + 1], [l1, l2], color="blue", linewidth=1, linestyle="--")
+        # Connect intervals between adjacent axes
+        for i in range(num_axes - 1):
+            var1 = variables[i]
+            var2 = variables[i + 1]
+            if var1 in bounds and var2 in bounds:
+                for l1, u1 in bounds[var1]:
+                    for l2, u2 in bounds[var2]:
+                        ax.plot([i, i + 1], [u1, u2], color=color, linewidth=1, linestyle="--")
+                        ax.plot([i, i + 1], [l1, l2], color=color, linewidth=1, linestyle="--")
 
     # Set axis labels
     ax.set_xticks(range(num_axes))
@@ -89,8 +91,8 @@ def main():
     for statement in statements:
         statement = statement.strip()
         print(f"Parsing statement: {statement}")
-        bounds = parse_normal_form(statement)
-        visualize_hyperblocks(bounds)
+        hyperblocks = parse_normal_form(statement)
+        visualize_hyperblocks(hyperblocks)
 
 if __name__ == "__main__":
     main()
