@@ -5,12 +5,16 @@ A hyperblock (HB) is mathematically defined as a set of n-dimensional (n-D) poin
 We can write this as a conjunctive normal form (CNF) statement such as:
 
 ```txt
-(0.2 <= x1 <= 0.4) & (0.2 <= x2 <= 0.4) & [(0.2 <= x3 <= 0.4) v (0.6 <= x3 <= 0.8)]
+(0.2 < x1 <= 0.4) & (0.2 <= x2 <= 0.4) & [(0.2 <= x3 <= 0.4) v (0.6 <= x3 <= 0.8)]
 ```
+
+This statement is parsed into a list of bounds for each attribute and visualized as a HB graph in PC where the graph is a upper and lower bound for each attribute and connected by polylines determined by the logical operators.
+
+![demo HB](./screenshots/demo_hb.png)
 
 This project parses CNF HB notation to parallel coordinates (PC) visualizations using Python and Matplotlib. The program reads in CNF statements from a `statements.txt` file and visualizes them with Matplotlib as PC n-D graphs.
 
-![demo HBs](./demo.png)
+![demo HBs](./screenshots/demo.png)
 
 ## Parsing
 
