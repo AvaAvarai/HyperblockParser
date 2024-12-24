@@ -10,6 +10,8 @@ def parse_single_statement(statement):
     matches = re.findall(pattern, statement)
 
     bounds = {}
+    # Track order of variables as they appear
+    var_order = []
     for match in matches:
         lower, lower_op, var, upper_op, upper = match
         lower, upper = float(lower), float(upper)
@@ -17,8 +19,9 @@ def parse_single_statement(statement):
         # Store the operator types along with the bounds
         if var not in bounds:
             bounds[var] = []
+            var_order.append(var)
         bounds[var].append((lower, upper, lower_op, upper_op))
-    return bounds
+    return bounds, var_order
 
 # Function to parse combined statements (e.g., HB1 + HB2)
 def parse_normal_form(statement):
@@ -26,22 +29,26 @@ def parse_normal_form(statement):
     # Split by '+' operator to handle combined hyperblocks
     parts = statement.split('+')
     hyperblocks = []
+    all_var_orders = []
 
     for part in parts:
         part = part.strip()
-        bounds = parse_single_statement(part)
+        bounds, var_order = parse_single_statement(part)
         hyperblocks.append(bounds)
+        all_var_orders.append(var_order)
 
-    return hyperblocks
+    # Combine variable orders while preserving first appearance order
+    final_var_order = []
+    for order in all_var_orders:
+        for var in order:
+            if var not in final_var_order:
+                final_var_order.append(var)
+
+    return hyperblocks, final_var_order
 
 # Function to visualize the hyperblocks in parallel coordinates
-def visualize_hyperblocks(hyperblocks):
+def visualize_hyperblocks(hyperblocks, variables):
     """Visualizes the hyperblocks as parallel coordinates."""
-    # Collect all unique variables
-    all_variables = set()
-    for bounds in hyperblocks:
-        all_variables.update(bounds.keys())
-    variables = sorted(all_variables)
     num_axes = len(variables)
 
     # Generate unique colors for each hyperblock
@@ -120,8 +127,8 @@ def main():
     for statement in statements:
         statement = statement.strip()
         print(f"Parsing statement: {statement}")
-        hyperblocks = parse_normal_form(statement)
-        visualize_hyperblocks(hyperblocks)
+        hyperblocks, var_order = parse_normal_form(statement)
+        visualize_hyperblocks(hyperblocks, var_order)
 
 if __name__ == "__main__":
     main()
