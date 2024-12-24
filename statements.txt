@@ -2,6 +2,7 @@
 (1.5 <= Width <= 32) & (32 <= Length <= 100) & (100 <= Height <= 200)
 (4.30 <= sepal_length <= 5.80) & (2.30 <= sepal_width <= 4.40) & (1.00 <= petal_length <= 1.90) & (0.10 <= petal_width <= 0.60)
 (1.00 <= petal_length <= 1.90) & (0.10 <= petal_width <= 0.60) & (4.30 <= sepal_length <= 5.80) & (2.30 <= sepal_width <= 4.40)
+[(4.30 <= sepal_length <= 5.80) & (2.30 <= sepal_width <= 4.40) & (1.00 <= petal_length <= 1.90) & (0.10 <= petal_width <= 0.60)] + [(4.90 <= sepal_length <= 7.00) & (2.00 <= sepal_width <= 3.40) & (3.00 <= petal_length <= 5.10) & (1.00 <= petal_width <= 1.80)] + [(4.90 <= sepal_length <= 7.90) & (2.20 <= sepal_width <= 3.80) & (4.50 <= petal_length <= 6.90) & (1.40 <= petal_width <= 2.50)]
 (0.2 <= x1 <= 0.4) & (0.2 <= x2 <= 0.4) & (0.3 <= x3 <= 0.9) & [(0.2 <= x4 <= 0.4) v (0.6 <= x4 <= 0.9)] & [(0.1 <= x5 <= 0.3) v (0.5 <= x5 <= 0.7) v (0.8 <= x5 <= 0.9)]
 (0.1 < temp <= 0.8) & (0.4 <= pressure <= 0.6) & [(0.2 <= humidity <= 0.4) v (0.6 <= humidity <= 0.8)] & (0.3 <= flow <= 0.5) & [(0.2 <= viscosity <= 0.4) v (0.7 <= viscosity <= 0.9)]
 [(0.2 <= velocity <= 0.4) v (0.6 <= velocity <= 0.8)] & [(0.1 <= density <= 0.3) v (0.7 <= density <= 0.9)] & (0.4 <= viscosity <= 0.6) & (0.5 <= volume <= 0.7) & [(0.3 <= pressure <= 0.5) v (0.8 <= pressure <= 0.9)]

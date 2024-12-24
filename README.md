@@ -2,10 +2,10 @@
 
 A Hyperblock (HB) is mathematically defined as an n-orthotope by a set of n-dimensional (n-D) points $`\{ \mathbf{x} = (x_1, x_2, \ldots, x_n) \} `$ with center n-D point $` \mathbf{c} = (c_1, c_2, \ldots, c_n) `$ and side lengths $` \mathbf{L} = (L_1, L_2, \ldots, L_n) `$, such that $` \forall_i \| x_i - c_i \| \leq \frac{L_i}{2} `$.
 
-We can write this in mathematical notation as a conjunctive normal form (CNF) statement of variables, inequalities, and logical operators; such as:
+We can write this in mathematical notation as a conjunctive normal form (CNF) statement of variables, inequalities, and logical operators; such as here are the three Fisher Iris data flower species HB statements in the form of a CNF statement which are combined by the `+` operator to one PC graph:
 
 ```txt
-(0.2 < x1 <= 0.4) & (0.2 <= x2 <= 0.4) & [(0.2 <= x3 <= 0.4) v (0.6 <= x3 <= 0.8)]
+[(4.30 <= sepal_length <= 5.80) & (2.30 <= sepal_width <= 4.40) & (1.00 <= petal_length <= 1.90) & (0.10 <= petal_width <= 0.60)] + [(4.90 <= sepal_length <= 7.00) & (2.00 <= sepal_width <= 3.40) & (3.00 <= petal_length <= 5.10) & (1.00 <= petal_width <= 1.80)] + [(4.90 <= sepal_length <= 7.90) & (2.20 <= sepal_width <= 3.80) & (4.50 <= petal_length <= 6.90) & (1.40 <= petal_width <= 2.50)]
 ```
 
 This project parses the statement into a list of bounds for each variable or attribute and visualizes the resultant HB as a graph in parallel coordinates (PC) where the graph is a upper and lower bound for each attribute connected by polylines by the logical operators.
