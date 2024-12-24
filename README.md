@@ -18,13 +18,13 @@ This project parses CNF HB notation to parallel coordinates (PC) visualizations 
 
 ## Parsing
 
-The parser supports HB statements in the following format:
+The parser supports CNF HB statements in the following format:
 
 ### Basic Syntax
 
 - Variables: Any alphanumeric variable name (case insensitive)
-- Inequalities: `<` (strict) or `<=` (non-strict)
-- Values: Decimal numbers between 0 and 1
+- Inequalities: `<` (strict, open circle) or `<=` (non-strict, closed circle)
+- Values: Decimal numbers
 - Logical operators:
   - `&` for AND
   - `v` for OR
@@ -32,11 +32,13 @@ The parser supports HB statements in the following format:
 - Parentheses: `()` to group expressions
 - Brackets: `[]` to group disjunctions
 
+The lower and upper bounds of the HB PC graph are determined by the global min and max of all the bounds in the statement.
+
 ### Statement Structure
 
-1. Single bounds: `(0.2 <= temperature <= 0.4)`
-2. Conjunctions: `(0.2 <= temp <= 0.4) & (0.3 <= pressure <= 0.5)`
-3. Disjunctions: `[(0.2 <= humidity <= 0.4) v (0.6 <= humidity <= 0.8)]`
+1. Single bounds: `(0.2 < temperature <= 0.4)`
+2. Conjunctions: `(0.2 < temp <= 0.4) & (0.3 <= pressure <= 0.5)`
+3. Disjunctions: `[(0.2 < humidity <= 0.4) v (0.6 <= humidity <= 0.8)]`
 4. Combined hyperblocks: `<hyperblock1> + <hyperblock2>`
 
 Please see the `statements.txt` file for more indepth examples.

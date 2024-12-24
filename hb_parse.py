@@ -47,6 +47,15 @@ def visualize_hyperblocks(hyperblocks):
     # Generate unique colors for each hyperblock
     colors = list(mcolors.TABLEAU_COLORS.values())
 
+    # Find global min and max bounds across all variables
+    global_min = float('inf')
+    global_max = float('-inf')
+    for bounds in hyperblocks:
+        for var in bounds:
+            for lower, upper, _, _ in bounds[var]:
+                global_min = min(global_min, lower)
+                global_max = max(global_max, upper)
+
     fig, ax = plt.subplots(figsize=(10, 6))
 
     for hb_idx, bounds in enumerate(hyperblocks):
@@ -87,7 +96,9 @@ def visualize_hyperblocks(hyperblocks):
     ax.set_xticks(range(num_axes))
     ax.set_xticklabels(variables)
     ax.set_xlim(-0.5, num_axes - 0.5)
-    ax.set_ylim(0, 1)
+    # Set y limits based on global min/max with small padding
+    padding = (global_max - global_min) * 0.05
+    ax.set_ylim(global_min - padding, global_max + padding)
     ax.set_xlabel("Attributes")
     ax.set_ylabel("Values")
     ax.set_title("Hyperblocks in Parallel Coordinates")
