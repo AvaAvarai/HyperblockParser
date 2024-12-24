@@ -43,6 +43,11 @@ The lower and upper bounds of the HB PC graph are determined by the global min a
 
 Please see the `statements.txt` file for more indepth examples.
 
+## Todo
+
+1. Count cases per class label within HB statements for some given CSV data
+2. Interactive REPL interface alongside static statement loading
+
 ## License
 
 HyperblockParser is licensed under the MIT License, free to use and modify, commercially and non-commercially, see the `LICENSE` file for more details.
