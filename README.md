@@ -1,6 +1,6 @@
 # HyperblockParser
 
-A hyperblock (HB) is mathematically defined as a set of n-dimensional (n-D) points: $ \{ x = (x_1, x_2, \ldots, x_n) \} $ with a center n-D point $ c = (c_1, c_2, \ldots, c_n) $ and side lengths $ L = (L_1, L_2, \ldots, L_n) $, such that $ \forall_i \| x_i - c_i \| \leq \frac{L_i}{2} $.
+A hyperblock (HB) is mathematically defined as a set of n-dimensional (n-D) points: $` \{ x = (x_1, x_2, \ldots, x_n) \} `$ with a center n-D point $` c = (c_1, c_2, \ldots, c_n) `$ and side lengths $` L = (L_1, L_2, \ldots, L_n) `$, such that $` \forall_i \| x_i - c_i \| \leq \frac{L_i}{2} `$.
 
 We can write this as a conjunctive normal form (CNF) statement such as:
 
