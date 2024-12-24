@@ -5,17 +5,19 @@ import re
 # Function to parse a single normal form statement
 def parse_single_statement(statement):
     """Parses a single normal form statement into axis bounds."""
-    pattern = r"(\d*\.?\d+)\s*<=\s*(\w+)\s*<=\s*(\d*\.?\d+)"
+    # Pattern to match the bounds of a single statement
+    pattern = r"(\d*\.?\d+)\s*([<](?:=)?)\s*(\w+)\s*([<](?:=)?)\s*(\d*\.?\d+)"
     matches = re.findall(pattern, statement)
 
     bounds = {}
     for match in matches:
-        lower, var, upper = match
+        lower, lower_op, var, upper_op, upper = match
         lower, upper = float(lower), float(upper)
         var = var.lower()
+        # Store the operator types along with the bounds
         if var not in bounds:
             bounds[var] = []
-        bounds[var].append((lower, upper))
+        bounds[var].append((lower, upper, lower_op, upper_op))
     return bounds
 
 # Function to parse combined statements (e.g., HB1 + HB2)
@@ -34,7 +36,7 @@ def parse_normal_form(statement):
 
 # Function to visualize the hyperblocks in parallel coordinates
 def visualize_hyperblocks(hyperblocks):
-    """Visualizes the hyperblocks as polylines in parallel coordinates."""
+    """Visualizes the hyperblocks as parallel coordinates."""
     # Collect all unique variables
     all_variables = set()
     for bounds in hyperblocks:
@@ -48,20 +50,36 @@ def visualize_hyperblocks(hyperblocks):
     fig, ax = plt.subplots(figsize=(10, 6))
 
     for hb_idx, bounds in enumerate(hyperblocks):
-        color = colors[hb_idx % len(colors)]  # Cycle through colors if there are many HBs
+        color = colors[hb_idx % len(colors)]
         for i, var in enumerate(variables):
             if var in bounds:
                 intervals = bounds[var]
-                for lower, upper in intervals:
+                for lower, upper, lower_op, upper_op in intervals:
+                    # Draw main interval line
                     ax.plot([i, i], [lower, upper], color=color, linewidth=2)
+                    
+                    # Add endpoint markers
+                    # 'o' for empty circle, 'C' for filled circle
+                    lower_marker = 'o' if '<' in lower_op and '=' not in lower_op else 'o'
+                    upper_marker = 'o' if '<' in upper_op and '=' not in upper_op else 'o'
+                    
+                    # Lower endpoint
+                    ax.plot(i, lower, color=color, marker=lower_marker, 
+                           fillstyle='none' if '<' in lower_op and '=' not in lower_op else 'full',
+                           markersize=10)
+                    
+                    # Upper endpoint
+                    ax.plot(i, upper, color=color, marker=upper_marker,
+                           fillstyle='none' if '<' in upper_op and '=' not in upper_op else 'full',
+                           markersize=10)
 
         # Connect intervals between adjacent axes
         for i in range(num_axes - 1):
             var1 = variables[i]
             var2 = variables[i + 1]
             if var1 in bounds and var2 in bounds:
-                for l1, u1 in bounds[var1]:
-                    for l2, u2 in bounds[var2]:
+                for l1, u1, l1_op, u1_op in bounds[var1]:
+                    for l2, u2, l2_op, u2_op in bounds[var2]:
                         ax.plot([i, i + 1], [u1, u2], color=color, linewidth=1, linestyle="--")
                         ax.plot([i, i + 1], [l1, l2], color=color, linewidth=1, linestyle="--")
 
